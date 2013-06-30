@@ -43,6 +43,7 @@
         <script type="text/javascript" src="scripts/holder.js"></script>
         <script type="text/javascript" src="scripts/document.js"></script>
         <script type="text/javascript" src="scripts/underscore.js"></script>
+
         
         
         
@@ -72,7 +73,8 @@
                 $('#comment').keypress(function(e) {
                     theComment = $("#comment").val();
                     if (e.which == 13 && theComment.trim().length != 0) {
-                        socket.emit("newMessage", {msg: $("#comment").val()});
+                        $("#comment").val("");
+                        socket.emit("newMessage", {msg: theComment});
                     }
                 });
             });
@@ -80,9 +82,12 @@
         <div class="hero hero-unit">
             Clients Online: <div style="display: inline;" id="conn"> </div>
             <div class="clearfix"></div>
-            <input id="comment" />
+            <input id="comment" type="text" />
         </div>
-        <div id="broadcast"> </div>
+
+            
+            <div id="broadcast"> </div>
+            
     </body>
 </html>
 

@@ -40,10 +40,12 @@ server.listen(app.get('port'), function(){
 });
 
 io = io.listen(server);
-io.configure(function () { 
-  io.set("transports", ["xhr-polling"]); 
-  io.set("polling duration", 10); 
+
+io.configure(function () {
+  io.set("transports", ["xhr-polling"]);
+  io.set("polling duration", 10);
 });
+
 console.log(routes.name()); 
 
 io.sockets.on('connection', function (socket) {
