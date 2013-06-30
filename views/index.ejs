@@ -1,28 +1,88 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <head>
+
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+        <!--<link rel="stylesheet" type="text/css" href="content/css/bootstrap.css">-->
+        <link rel="stylesheet" type="text/css" href="content/css/bootmetro-icons.css">
+        <link rel="stylesheet" type="text/css" href="content/css/bootmetro.css">
+        <!--  <link rel="stylesheet" type="text/css" href="content/css/bootmetro-responsive.css"> -->
+        <!--  <link rel="stylesheet" type="text/css" href="content/css/bootmetro-ui-light.css">   -->
+        <link rel="stylesheet" type="text/css" href="content/css/boot_tetro.css">  
+        <link rel="stylesheet" type="text/css" href="content/css/datepicker.css">
+        <!--[if IE 7]>
+        <link rel="stylesheet" type="text/css" href="content/css/bootmetro-icons-ie7.css">
+        <![endif]-->
+
+        <!--  these two css are to use only for documentation -->
+        <link rel="stylesheet" type="text/css" href="content/css/demo.css">
+        <link rel="stylesheet" type="text/css" href="scripts/google-code-prettify/prettify.css" >
+
+        <!-- Le fav and touch icons -->
+        <link rel="shortcut icon" href="content/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="content/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="content/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="content/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="content/ico/apple-touch-icon-57-precomposed.png">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>           
+        <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
+
+
+        <!--<script>window.jQuery || document.write("<script src='scripts/jquery-1.8.3.min.js'>\x3C/script>")</script> -->
+
+        <script type="text/javascript" src="scripts/google-code-prettify/prettify.js"></script>
+        <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+        <script type="text/javascript" src="scripts/bootmetro-panorama.js"></script>
+        <script type="text/javascript" src="scripts/bootmetro-pivot.js"></script>
+        <script type="text/javascript" src="scripts/bootmetro-charms.js"></script>
+        <script type="text/javascript" src="scripts/bootstrap-datepicker.js"></script>
+        <!--<script type="text/javascript" src="scripts/jquery.nicescroll.js"></script>-->
+        <script type="text/javascript" src="scripts/jquery.touchSwipe.js"></script>
+        <script type="text/javascript" src="scripts/demo.js"></script>
+        <script type="text/javascript" src="scripts/holder.js"></script>
+        <script type="text/javascript" src="scripts/document.js"></script>
+        <script type="text/javascript" src="scripts/underscore.js"></script>
+        
+        
+        
+        
+        
+        
+        <!--In order for socket to work include the following-->
+        
+        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+    </head>
     
-
-  </head>
-  <body>
-      <script>
-          var socket = io.connect('http://localhost');
-          socket.on('news', function (data) {
-              console.log(data);
-              socket.emit('my other event', { my: 'data' });
-              
-          });
-      </script>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-       
-    <script>
-
-
-    </script>
-  </body>
+    <body>
+        <script>
+            var socket = io.connect('http://localhost');
+            //Get the number of clients connected from BROADCAST
+            socket.on('conn', function(data) {
+                $("div#conn").text(data['conns'])
+            });
+            socket.on('messageFromApp', function(data) {
+                console.log("Go the emittion back");
+                theCommentToAppend = data['appendIt'];
+                theCommentToAppend = _.escape(theCommentToAppend);
+                $("#broadcast").append(theCommentToAppend + "<br>");
+            });
+            $(document).ready(function() {
+                $('#comment').keypress(function(e) {
+                    theComment = $("#comment").val();
+                    if (e.which == 13 && theComment.trim().length != 0) {
+                        socket.emit("newMessage", {msg: $("#comment").val()});
+                    }
+                });
+            });
+        </script>
+        <div class="hero hero-unit">
+            Clients Online: <div style="display: inline;" id="conn"> </div>
+            <div class="clearfix"></div>
+            <input id="comment" />
+        </div>
+        <div id="broadcast"> </div>
+    </body>
 </html>
 

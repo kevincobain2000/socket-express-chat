@@ -1,19 +1,14 @@
 
-/**
- * Module dependencies.
- */
-
-
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
   , io = require('socket.io')
-  , path = require('path');
+  , path = require('path')
+  , redis = require('redis');
 
 
 var app = express();
-
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -24,7 +19,7 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
-//app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 
@@ -44,15 +39,20 @@ server.listen(app.get('port'), function(){
   
 });
 
-
-io= io.listen(server);
+io = io.listen(server);
+console.log(routes.name()); 
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
+    
+  socket.on('newMessage',function(data){
+     io.sockets.emit("messageFromApp",{appendIt:data['msg']}) ;
   });
+  
+  var con = io.sockets.manager.connected;
+  //Emit the connection Note that this is io.sockets.emit NOT socket.emit because it is broadcaseted
+  //to all sockets
+  io.sockets.emit('conn',{conns:Object.keys(con).length});
+    console.log(socket.id);
+  
 });
-
-
 
