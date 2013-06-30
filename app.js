@@ -41,10 +41,7 @@ server.listen(app.get('port'), function(){
 
 io = io.listen(server);
 
-io.configure(function () {
-  io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
-});
+
 
 console.log(routes.name()); 
 
@@ -59,6 +56,14 @@ io.sockets.on('connection', function (socket) {
   //to all sockets
   io.sockets.emit('conn',{conns:Object.keys(con).length});
     console.log(socket.id);
+    
+  socket.on('disconnect', function(data){
+      var con = io.sockets.manager.connected;
+      console.log("disconencted");
+      io.sockets.emit('conn',{conns:Object.keys(con).length-1}); //decrement on disconnection
+      console.log(socket.id);
+  });
   
 });
+
 
