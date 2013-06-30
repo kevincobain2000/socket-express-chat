@@ -21,7 +21,7 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+//app.use(express.session());
 
 // development only
 if ('development' == app.get('env')) {
@@ -30,7 +30,7 @@ if ('development' == app.get('env')) {
 
 
 
-app.get('/', routes.index);
+//app.get('/', routes.index);
 app.get('/users', user.list);
 
 var server = http.createServer(app);
@@ -39,16 +39,24 @@ server.listen(app.get('port'), function(){
   
 });
 
-io = io.listen(server);
+app.get("/", function(req, res){
+    res.render("index.ejs");    
+
+});
 
 
+
+app.post("/", function(req, res){
+    console.log("THIIIIIIIIIIIIIIIIIIIIIIIIIIIIII");
+    console.log(req.body);
+    res.send({"THIS":"is"});
+});
 
 console.log(routes.name()); 
-
+io = io.listen(server);
 io.sockets.on('connection', function (socket) {
-    
   socket.on('newMessage',function(data){
-     io.sockets.emit("messageFromApp",{appendIt:data['msg']}) ;
+     io.sockets.emit("messageFromApp",{appendIt:data['msg'],time:data['time']}) ;
   });
   
   var con = io.sockets.manager.connected;
@@ -65,5 +73,3 @@ io.sockets.on('connection', function (socket) {
   });
   
 });
-
-
