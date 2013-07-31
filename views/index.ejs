@@ -2,7 +2,7 @@
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <body>
     <script>
-        var socket = io.connect('http://localhost');
+        var socket = io.connect('http://socket-express-chat.herokuapp.com');
         //Get the number of clients connected from BROADCAST
         socket.on('conn', function(data) {
             $("div#conn").text(data['conns'])
