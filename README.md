@@ -8,4 +8,4 @@ http://localhost:3000/
 Live Demo on Heroku
 -------------------
 
-http://socket-express-chat.herokuapp.com/
+http://www8355ue.sakura.ne.jp:3003/
